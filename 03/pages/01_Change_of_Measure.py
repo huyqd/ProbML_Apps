@@ -123,9 +123,9 @@ p = norm.pdf(x, loc=0, scale=1)
 py = p / jnp.abs(df)
 
 # integrals
-px_int = jnp.trapz(y=p, x=x)
-f_int = jnp.trapz(y=p, x=f)
-py_int = jnp.trapz(y=py, x=f)
+px_int = jnp.trapezoid(y=p, x=x)
+f_int = jnp.trapezoid(y=p, x=f)
+py_int = jnp.trapezoid(y=py, x=f)
 
 fig, ax = plt.subplots()
 
