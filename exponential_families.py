@@ -1,5 +1,6 @@
 import abc
 from numpy.typing import ArrayLike
+import jax
 import jax.numpy as jnp
 from functools import cached_property, partial
 
@@ -131,3 +132,20 @@ class ConjugateFamily(ExponentialFamily):
         we can still compute the unnormalized log pdf of the conjugate family.
         """
         return self.sufficient_statistics(w) @ jnp.asarray(natural_parameters)
+
+    def laplace_precision(
+        self,
+        natural_parameters: ArrayLike | jnp.ndarray,
+        mode: ArrayLike | jnp.ndarray,
+    ) -> jnp.ndarray:
+        """Signature `(P),(D)->()`
+
+        If the conjugate log partition function is not available,
+        we can still compute the Laplace approximation to the posterior,
+        using only structure provided by the likelihood.
+        This requires the mode of the likelihood, which is not available in general,
+        but may be found by numerical optimization if necessary.
+        """
+        return -jax.hessian(self.unnormalized_logpdf, argnums=0)(
+            jnp.asarray(mode), natural_parameters
+        )
