@@ -19,15 +19,15 @@ st.set_page_config(
     initial_sidebar_state="expanded",
     menu_items={"About": "(c) Philipp Hennig, 2023"},
 )
-st.title('Change of Measure')
-st.markdown('''
+st.title("Change of Measure")
+st.markdown("""
             In this app, we want to visualize the theorem from slide 19 in order to get a better understanding of it.  
             First, recall the theorem regarding the change of variable for probability density functions, which stated
-            ''')
-st.latex(r'''
+            """)
+st.latex(r"""
         p_Y(y) = p_X(v(y)) \cdot \left|\frac{dv(y)}{dy}\right| = p_X(v(y)) \cdot \left|\frac{du(x)}{dx}\right|^{-1},
-        ''')
-st.markdown('''
+        """)
+st.markdown("""
             whereby
             * $X$ is a random variable with the probability density function $p_X(x)$ and
             * $Y = u(X)$ is a monotonic differentiable function with inverse $X = v(Y)$.
@@ -50,11 +50,7 @@ st.markdown('''
             we need to multiply $p_X(v(y))$ with the derivative of $v(y)$ for all $y \in Y$, as decribed in the theorem.
             Doing this, we now get an integral much closer to 1. Activating the box "use correction" at the bottom left
             of the page will conduct this computation and plot the resulting curve.
-            ''')
-
-
-def sigmoid(loc: float, gain: float) -> Callable:
-    return value_and_grad(lambda a: 1.0 / (1.0 + jnp.exp(-(a - loc) / gain)))
+            """)
 
 
 c1 = st.sidebar.container()
@@ -110,6 +106,11 @@ locs = jnp.asarray([l1, l2, l3])
 gains = jnp.asarray([g1, g2, g3])
 N = 400
 x = jnp.linspace(-3, 3, N)
+
+
+def sigmoid(loc: float, gain: float) -> Callable:
+    return value_and_grad(lambda a: 1.0 / (1.0 + jnp.exp(-(a - loc) / gain)))
+
 
 # I do not know how to do this list comprehension (efficiently) in jax. Improvements welcome!
 Fs = jnp.asarray([vmap(sigmoid(l, g))(x) for (l, g) in zip(locs, gains)])  # [3, 2, N]
